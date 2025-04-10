@@ -40,6 +40,27 @@
         transform: scale(1.05) translateY(-3px);
       }
 
+      #music-toggle {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background-color: #00b894;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        padding: 10px 14px;
+        font-size: 18px;
+        cursor: pointer;
+        z-index: 10001;
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+      }
+
+      #music-toggle:hover {
+        background-color: #019875;
+        transform: scale(1.1);
+      }
+
       #preloader {
         position: fixed;
         top: 0;
@@ -76,16 +97,70 @@
           transform: translateY(0);
         }
       }
+
+      .footer-ivan {
+        margin-top: 80px;
+        text-align: center;
+        font-size: 14px;
+        color: #888;
+        animation: fadeUp 2s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+        position: relative;
+      }
+
+      @keyframes fadeUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .footer-ivan .neon {
+        color: #00f7ff;
+        font-weight: bold;
+        text-shadow:
+          0 0 5px #00f7ff,
+          0 0 10px #00f7ff,
+          0 0 20px #00f7ff;
+        animation: flicker 3s infinite;
+      }
+
+      @keyframes flicker {
+        0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+          opacity: 1;
+          text-shadow:
+            0 0 5px #00f7ff,
+            0 0 10px #00f7ff,
+            0 0 20px #00f7ff,
+            0 0 30px #00f7ff;
+        }
+
+        20%, 24%, 55% {
+          opacity: 0.3;
+          text-shadow: none;
+        }
+      }
+
+      .footer-ivan .made-in {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #666;
+        opacity: 0.8;
+      }
     </style>
   </head>
   <body>
+
     <div id="preloader">
       <img src="logo.png" alt="Ivan Frontend Logo">
     </div>
 
-    <audio id="bg-music" autoplay loop style="display: none">
-        <source src="https://cdn.pixabay.com/download/audio/2025/04/03/audio_c3bc96afe2.mp3?filename=asphalt-sizzle-322468.mp3" type="audio/mpeg">
-      </audio>      
+    <button id="music-toggle" onclick="toggleMusic()" title="Увімкнути/Вимкнути музику">🎵</button>
+
+    <audio id="bg-music" autoplay loop style="display: none;">
+      <source src="https://fs.meloua.com/dl/593a5fc2a1974d7d42cb5831052a5849/jockii-druce-buti-dolbayobom-(meloua.com)/1004255.mp3" type="audio/mpeg">
+    </audio>
 
     <img
       src="https://i.imgur.com/B4528zT.jpeg"
@@ -105,11 +180,19 @@
 
     <p class="fade-in fade-in-delay-5">Дякую, що завітав на мій сайт!</p>
 
+    <footer class="footer-ivan">
+      <div class="built">
+        <span class="by">Built by <strong>IVAN</strong></span><br>
+        <span class="neon">Code. Create. Defend.</span>
+      </div>
+      <div class="made-in">
+        🇺🇦 Made in Ukraine
+      </div>
+    </footer>
+
     <script>
       window.addEventListener("load", function () {
         const preloader = document.getElementById("preloader");
-
-        // Затримка: 2 секунди показуємо логотип, потім плавно ховаємо
         setTimeout(() => {
           preloader.style.opacity = "0";
           setTimeout(() => {
@@ -118,14 +201,30 @@
         }, 2000);
       });
 
-      // Додаємо слухача на клік, щоб запустити музику
-      window.addEventListener("click", function () {
-        const music = document.getElementById("bg-music");
+      const music = document.getElementById("bg-music");
+      const musicToggle = document.getElementById("music-toggle");
+      let playing = true;
+
+      window.toggleMusic = function () {
         if (music.paused) {
-          music.play().catch(e => console.log("Autoplay error:", e));
+          music.play();
+          musicToggle.innerText = "🔇";
+          playing = true;
+        } else {
+          music.pause();
+          musicToggle.innerText = "🎵";
+          playing = false;
         }
-      });
+      };
+
+      window.addEventListener("click", function () {
+        if (!playing) {
+          music.play().then(() => {
+            musicToggle.innerText = "🔇";
+            playing = true;
+          }).catch(() => {});
+        }
+      }, { once: true });
     </script>
   </body>
 </html>
-``` 
