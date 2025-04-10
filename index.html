@@ -40,23 +40,6 @@
         transform: scale(1.05) translateY(-3px);
       }
 
-      button {
-        margin-top: 20px;
-        padding: 12px 24px;
-        font-size: 18px;
-        background-color: #00b894;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.3s ease;
-      }
-
-      button:hover {
-        background-color: #019875;
-        transform: scale(1.05);
-      }
-
       #preloader {
         position: fixed;
         top: 0;
@@ -100,9 +83,9 @@
       <img src="logo.png" alt="Ivan Frontend Logo">
     </div>
 
-    <audio id="bg-music" loop>
-      <source src="https://cdn.pixabay.com/download/audio/2025/04/03/audio_c3bc96afe2.mp3?filename=asphalt-sizzle-322468.mp3">
-    </audio>
+    <audio id="bg-music" autoplay loop style="display: none">
+        <source src="https://cdn.pixabay.com/download/audio/2025/04/03/audio_c3bc96afe2.mp3?filename=asphalt-sizzle-322468.mp3" type="audio/mpeg">
+      </audio>      
 
     <img
       src="https://i.imgur.com/B4528zT.jpeg"
@@ -122,14 +105,11 @@
 
     <p class="fade-in fade-in-delay-5">Дякую, що завітав на мій сайт!</p>
 
-    <button onclick="toggleMusic()" id="music-btn" class="fade-in fade-in-delay-5">
-      🎵 Увімкнути музику
-    </button>
-
     <script>
-      // Прелоадер з логотипом
       window.addEventListener("load", function () {
         const preloader = document.getElementById("preloader");
+
+        // Затримка: 2 секунди показуємо логотип, потім плавно ховаємо
         setTimeout(() => {
           preloader.style.opacity = "0";
           setTimeout(() => {
@@ -138,32 +118,14 @@
         }, 2000);
       });
 
-      // Музика — увімкнення/вимкнення
-      const music = document.getElementById("bg-music");
-      const btn = document.getElementById("music-btn");
-      let playing = false;
-
-      function toggleMusic() {
-        if (!playing) {
-          music.play();
-          btn.innerText = "🔇 Вимкнути музику";
-          playing = true;
-        } else {
-          music.pause();
-          btn.innerText = "🎵 Увімкнути музику";
-          playing = false;
-        }
-      }
-
-      // Дозволити автозапуск при першому кліку
+      // Додаємо слухача на клік, щоб запустити музику
       window.addEventListener("click", function () {
-        if (!playing) {
-          music.play().then(() => {
-            btn.innerText = "🔇 Вимкнути музику";
-            playing = true;
-          }).catch(() => {});
+        const music = document.getElementById("bg-music");
+        if (music.paused) {
+          music.play().catch(e => console.log("Autoplay error:", e));
         }
-      }, { once: true });
+      });
     </script>
   </body>
 </html>
+``` 
